@@ -12,6 +12,10 @@ if ('addEventListener' in document) {
 
 // 引入全局样式
 import './style/common.less'
+// 引入全局的vant ui 组件库
+import './plugins/vant'
+// 引入rem
+import './config/rem'
 
 Vue.config.productionTip = false
 

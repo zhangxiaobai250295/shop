@@ -1,9 +1,12 @@
 <template>
-  <div id="app">
-    11
-  </div>
+    <div id="app">
+        <router-view></router-view>
+    </div>
 </template>
 
 <style lang="less">
-
+    #app {
+        height: 100%;
+        width: 100%;
+    }
 </style>

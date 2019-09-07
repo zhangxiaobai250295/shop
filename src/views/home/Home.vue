@@ -3,6 +3,7 @@
       <div v-if="!showLoading">
         <Header />
         <Swiper :swiperData="swiperData"/>
+        <div>21346543182168543413418543132</div>
         <Nav :navData="navData"/>
         <FlashSale />
       </div>

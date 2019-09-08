@@ -7,7 +7,7 @@
       <span class="more">更多</span>
     </div>
     <div class="itemsWrapper">
-      <FlashSaleItem />
+      <FlashSaleItem v-for="(item, index) in flashSaleData" :key="item.id" :flashSaleList="item"/>
     </div>
   </div>
 </template>
@@ -16,6 +16,12 @@
   import FlashSaleItem from "./FlashSaleItem";
   export default {
     name: "FlashSale",
+    props: {
+      flashSaleData: {
+        type: Array,
+        default: []
+      }
+    },
     components: {
       FlashSaleItem
     }

@@ -2,13 +2,13 @@
   <div id="" class="container">
     <div class="itemWrapper">
       <div class="imageWrapper">
-        <img class="image" src="https://img.ddimg.mobi/product/4513b9fc5935f1548406258985.jpg!deliver.product.list?imageMogr2/thumbnail/150x150" alt="广告图片">
+        <img class="image" :src="flashSaleList.small_image" :alt="flashSaleList.spec">
       </div>
       <div>
-        <div class="name">爱森五花肉 500g</div>
-        <div class="originPrice">￥46.90</div>
+        <div class="name">{{flashSaleList.name}}</div>
+        <div class="originPrice">{{flashSaleList.origin_price}}</div>
         <div class="priceWrapper">
-          <div class="price">￥<span class="f28">6</span>99</div>
+          <div class="price">{{flashSaleList.price | moneyFormat}}</div>
           <div class="iconCartWrapper">
             <svg viewBox="0 0 52 52" class="icon icon-60">
               <defs>
@@ -33,7 +33,13 @@
 
 <script>
   export default {
-    name: "FlashSaleItem"
+    name: "FlashSaleItem",
+    props: {
+      flashSaleList: {
+        type: Object,
+        default: {}
+      }
+    }
   }
 </script>
 

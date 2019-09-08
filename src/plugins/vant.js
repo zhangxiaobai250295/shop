@@ -7,3 +7,7 @@ Vue.use(Tabbar).use(TabbarItem);
 // loading 加载动画
 import { Loading } from 'vant';
 Vue.use(Loading);
+
+// 引入图片的加载动画
+import { Image } from 'vant';
+Vue.use(Image);

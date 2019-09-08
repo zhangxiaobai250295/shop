@@ -4,6 +4,8 @@
 - src  => 项目文件目录
 - config => 配置文件夹
     - rem.js
+    - global.js => 定义了回到顶部的动画和是否显示回到顶部的按钮的条件
+    - filters => 全局的过滤器(价格如何显示,加￥或是不加等)
 - images => 图片文件夹
 - plugins => 插件文件夹
     - vant.js => vant ui的配置文件
@@ -140,6 +142,18 @@ data() {
     doc.addEventListener('DOMContentLoaded', recalc, false);
 })(document, window);
 ```
+## 在filters.js中注册一个全局的价格过滤器
+- 注册过滤器
+```
+import Vue from  'vue'
+
+// 人民币过滤器
+Vue.filter('moneyFormat', (value)=>{
+  return '¥' + Number(value).toFixed(2);
+});
+```
+- main.js中全局引入
+- {{flashSaleList.price(需要过滤的数据) | moneyFormat}}
 ## Project setup
 ```
 npm install

@@ -1,23 +1,37 @@
 <template>
     <div id="home">
       <div v-if="!showLoading">
+        <!--   头部     -->
         <Header />
+        <!--   轮播图     -->
         <Swiper :swiperData="swiperData"/>
-        <div>21346543182168543413418543132</div>
+        <!--   食品分类导航     -->
         <Nav :navData="navData"/>
-        <FlashSale />
+        <!--   秒杀模块     -->
+        <FlashSale :flashSaleData="flashSaleData"/>
+        <!--   猜你喜欢模块     -->
+        <YouLike :youLikeData="youLikeData"/>
+        <MarkPage v-if="showBackStatus" @clickItem="scrollTop"/>
       </div>
       <van-loading v-else type="spinner" size="24px" color="#75a342" class="position">加载中...</van-loading>
     </div>
 </template>
 
 <script>
-  import {HomeModel} from "../../service/home";
   import Header from "./components/header/Header";
   import Swiper from "./components/swiper/Swiper";
   import Nav from "./components/nav/Nav";
   import FlashSale from "./components/flashsale/FlashSale";
+  import YouLike from "./components/youLike/YouLike";
+  import MarkPage from "./components/markPage/MarkPage";
+
+  // 首页数据处理模块
+  import {HomeModel} from "../../service/home";
   const homeModel = new HomeModel();
+
+  // 3. 引入处理返回顶部的函数
+  import {showBack, animate} from "@/config/global";
+
   export default {
     name: "Home",
     created() {
@@ -27,20 +41,38 @@
       return {
         swiperData: [],
         navData: [],
-        showLoading: true
+        flashSaleData: [],        // 秒杀数据
+        youLikeData: [],
+        showLoading: true,        // 是否显示在进入home页面时数据未加载成功时的加载图片
+        showBackStatus: false     // 是否显示返回顶部的按钮
       }
     },
     components: {
-      Header, Swiper, Nav, FlashSale
+      Header, Swiper, Nav, FlashSale, YouLike, MarkPage
     },
     methods: {
       async getHomeData() {
         const HomeData = await homeModel.getHomeData();
+        console.log(HomeData);
         if (HomeData.success) {
           this.swiperData = HomeData.data.list[0].icon_list;
           this.navData = HomeData.data.list[2].icon_list;
-          this.showLoading = false
+          this.flashSaleData = HomeData.data.list[3].product_list;
+          this.youLikeData = HomeData.data.list[12].product_list;
+
+          this.showLoading = false;   // 隐鲹加载数据动画
+
+          // 开始监听滚动, 到达一定位置就显示返回顶部按钮
+          showBack((status)=>{
+            // console.log(status);
+            this.showBackStatus = status;
+          });
         }
+      },
+      scrollTop() {
+        // 做缓动动画返回顶部
+        let docB = document.documentElement || document.body;
+        animate(docB, {scrollTop: '0'}, 400, 'ease-out');
       }
     }
   }

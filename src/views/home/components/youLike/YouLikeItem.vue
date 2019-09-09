@@ -27,7 +27,7 @@
               <div class="originPrice">{{youLikeItemData.origin_price | moneyFormat}}</div>
             </div>
           </div>
-          <div class="iconCartWrapper">
+          <div class="iconCartWrapper" @click="addToCart(youLikeItemData)">
             <svg viewBox="0 0 52 52" class="icon iconCart">
               <defs>
                 <radialGradient cx="27.0288363%" cy="10.3693483%" fx="27.0288363%" fy="10.3693483%" r="93.8427229%" id="radialGradient-1">
@@ -50,12 +50,19 @@
 </template>
 
 <script>
+  // 引入发布者订阅插件
+  import PubSub from 'pubsub-js'
   export default {
     name: "YouLikeItem",
     props: {
       youLikeItemData: {
         type: Object,
         default: {}
+      }
+    },
+    methods: {
+      addToCart(goods) {
+        PubSub.publish('homeAddToCart', goods)
       }
     }
   }

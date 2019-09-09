@@ -13,7 +13,7 @@
         <YouLike :youLikeData="youLikeData"/>
         <MarkPage v-if="showBackStatus" @clickItem="scrollTop"/>
       </div>
-      <van-loading v-else type="spinner" size="24px" color="#75a342" class="position">加载中...</van-loading>
+      <van-loading v-else type="spinner" size="24px" color="#75a342" class="loading-position">加载中...</van-loading>
     </div>
 </template>
 
@@ -32,10 +32,35 @@
   // 3. 引入处理返回顶部的函数
   import {showBack, animate} from "@/config/global";
 
+  // 引入发布者订阅插件
+  import PubSub from 'pubsub-js'
+
+  // 引入vuex
+  import {mapMutations} from 'vuex'
+
+  import { Toast } from 'vant';
+
   export default {
     name: "Home",
     created() {
       this.getHomeData();
+    },
+    mounted() {
+      // 订阅消息
+      PubSub.subscribe('homeAddToCart',(msg,goods) => {
+        if (msg === 'homeAddToCart') {
+          this.ADD_GOODS({
+            goodsId: goods.id,
+            goodsName: goods.name,
+            smallImage: goods.small_image,
+            goodsPrice: goods.price,
+          })
+        }
+        Toast({
+          message: '添加购物车成功',
+          duration: 800
+        });
+      })
     },
     data(){
       return {
@@ -43,7 +68,7 @@
         navData: [],
         flashSaleData: [],        // 秒杀数据
         youLikeData: [],
-        showLoading: true,        // 是否显示在进入home页面时数据未加载成功时的加载图片
+        showLoading: true,        // 是否显示在进入home页面时数据未加载成功时的加载动画
         showBackStatus: false     // 是否显示返回顶部的按钮
       }
     },
@@ -51,6 +76,7 @@
       Header, Swiper, Nav, FlashSale, YouLike, MarkPage
     },
     methods: {
+      ...mapMutations(['ADD_GOODS']),
       async getHomeData() {
         const HomeData = await homeModel.getHomeData();
         console.log(HomeData);
@@ -80,11 +106,6 @@
 
 <style lang="less" scoped>
 #home{
-  .position{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+
 }
 </style>

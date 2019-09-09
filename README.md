@@ -154,6 +154,54 @@ Vue.filter('moneyFormat', (value)=>{
 ```
 - main.js中全局引入
 - {{flashSaleList.price(需要过滤的数据) | moneyFormat}}
+## 使用keep-alive标签实现数据的缓存
+- 在路由的配置文件中(我们需要home和category页面有缓存，可以在路由元信息mate中加入一个数据,以便来判断是否要缓存)
+```
+ {path: 'home', name: 'home', component: Home, meta: {keepAlive: true}},
+```
+- 在路由的出口做判断
+```
+<keep-alive>
+  <router-view v-if="$route.meta.keepAlive"/>
+</keep-alive>
+<router-view v-if="!$route.meta.keepAlive"/>
+```
+## 使用BetterScroll插件实现category左侧的分类
+- BetterScroll 是一款重点解决移动端（已支持 PC）各种滚动场景需求的插件。它的核心是借鉴的 iscroll 的实现，它的 API 设计基本兼容 iscroll，在 iscroll 的基础上又扩展了一些 feature 以及做了一些性能优化。
+- npm install better-scroll -S
+- import BScroll from 'better-scroll' (在需要的组件中引入或者在main中全局引入)
+- 初始化,注意：一定要等需要滚动的数据加载下来之后再初始化(更vant的轮播图一样,很多插件的初始化都是要等数据下来在初始化)
+```
+this.$nextTick(() => {
+    this.leftScroll = new BScroll('.leftWrapper', {probeType: 3})
+})
+probeType选项：作用：有时候我们需要知道滚动的位置。当 probeType 为 1 的时候，会非实时（屏幕滑动超过一定时间后）派发scroll 事件；当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。如果没有设置该值，其默认值为 0，即不派发 scroll 事件。
+```
+- 注意：滚动元素的父元素一定要设置一个固定的高度,否则滚动不会生效
+- $nextTick ：vue中对dom元素的更新有一个更新队列，一个队列就是一个事件循环，一个事件循环就是一个Tick，组件一开始加载的时候，渲染的dom元素就是一个Tick，而第一个Tick的时候，滚动插件需要的数据可能还没有请求过来，所以我们不能在第一个Tick的时候初始化我们的滚动插件
+## 使用发布者和消息订阅插件 
+- 为了实现不同页面商品数据加入购物车的操作（因为加入购物车这个按钮所在的组件层级有点深，如果使用自定义事件emmit来传递事件有点麻烦，而且加入购物车这个事件应该是在整个页面组件的最外层来实现的）
+- npm i pubsub-js --save  // 下载插件
+- import PubSub from 'pubsub-js'  // 在需要的组件中引入或者全局引入
+- 
+```
+ // 订阅消息
+  PubSub.subscribe('homeAddToCart',(msg,goods) => {
+    if (msg === 'homeAddToCart') {
+      this.ADD_GOODS({
+        goodsId: goods.id,
+        goodsName: goods.name,
+        smallImage: goods.small_image,
+        goodsPrice: goods.price
+      })
+    }
+  })
+
+  // 发布消息
+addToCart(goods) {
+    PubSub.publish('homeAddToCart', goods)
+}
+```  
 ## Project setup
 ```
 npm install

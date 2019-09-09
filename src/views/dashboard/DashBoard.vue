@@ -18,7 +18,10 @@
         <img slot="icon" slot-scope="props" :src="props.active ? mine_icon.active : mine_icon.normal" alt="">
       </van-tabbar-item>
     </van-tabbar>
-    <router-view />
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"/>
   </div>
 </template>
 
@@ -27,7 +30,7 @@
     name: "DashBoard",
     data() {
       return {
-        active: 0,
+        active: Number(sessionStorage.getItem('tabBarActiveIndex')) || 0,
         home_icon: {
           normal: require('@/images/tabbar/home_default.png'),
           active: require('@/images/tabbar/home_selected.png')
@@ -44,6 +47,12 @@
           normal: require('@/images/tabbar/mine_default.png'),
           active: require('@/images/tabbar/mine_selected.png')
         }
+      }
+    },
+    watch: {
+      active(value) {
+        let tabBarActiveIndex = value > 0 ? value : 0;
+        sessionStorage.setItem('tabBarActiveIndex', tabBarActiveIndex)
       }
     }
   }

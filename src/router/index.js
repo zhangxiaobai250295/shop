@@ -20,9 +20,9 @@ export default new Router({
       component: DashBoard,
       children: [
         {path: '/', redirect: '/dashboard/home'},
-        {path: 'home', name: 'home', component: Home},
+        {path: 'home', name: 'home', component: Home, meta: {keepAlive: true}},
         {path: 'cart', name: 'cart', component: Cart},
-        {path: 'category', name: 'category', component: Category},
+        {path: 'category', name: 'category', component: Category, meta: {keepAlive: true}},
         {path: 'mine', name: 'mine', component: Mine},
       ]
     }

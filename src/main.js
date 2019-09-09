@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router/index'
+import store from './store/index'
 
 // // 引入fastclick
 import FastClick from 'fastclick'
@@ -25,6 +26,7 @@ import './config/filters'
 Vue.config.productionTip = false;
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app');

@@ -15,11 +15,3 @@ Vue.use(Image);
 // 消息提示
 import { Toast } from 'vant';
 Vue.use(Toast);
-
-// 弹出框 ，用处：在购物车商品删除时提示用户是否删除
-import { Dialog } from 'vant';
-Vue.use(Dialog);
-
-// 导航条
-import { NavBar } from 'vant';
-Vue.use(NavBar);

@@ -37,7 +37,7 @@
 
   // 引入vuex
   import {mapMutations} from 'vuex'
-  // 引入通知组件
+
   import { Toast } from 'vant';
 
   export default {

@@ -36,34 +36,10 @@
   // 引入better-scroll滚动插件
   import BScroll from 'better-scroll'
 
-  // 引入通知组件
-  import { Toast } from 'vant';
-  // 引入发布者订阅插件
-  import PubSub from 'pubsub-js'
-  // 引入vuex
-  import {mapMutations} from 'vuex'
-
   export default {
     name: "Category",
     components: {
       Header, ContentView
-    },
-    mounted() {
-      // 订阅消息
-      PubSub.subscribe('categoryAddToCart',(msg,goods) => {
-        if (msg === 'categoryAddToCart') {
-          this.ADD_GOODS({
-            goodsId: goods.id,
-            goodsName: goods.name,
-            smallImage: goods.small_image,
-            goodsPrice: goods.price,
-          })
-        }
-        Toast({
-          message: '添加购物车成功',
-          duration: 800
-        });
-      })
     },
     created (){
       this.getCategoryData();      // 获取category页面的全部数据
@@ -77,7 +53,6 @@
       }
     },
     methods: {
-      ...mapMutations(['ADD_GOODS']),
       getCategoryData (){             // 获取category的全部数据
         const categoriesData = categoryModel.getCategoriesData();
         const categoriesDetailData = categoryModel.getCategoriesDetailData('/lk001');

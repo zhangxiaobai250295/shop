@@ -3,7 +3,8 @@ import Router from 'vue-router'
 
 // 引入一级组件
 import DashBoard from "../views/dashboard/DashBoard";
-// 使用懒加载
+const Order = () => import('./../views/order/Order.vue');
+// 使用懒加载  DashBoard下的二级组件
 const Home = () => import('./../views/home/Home.vue');
 const Category = () => import('./../views/category/Category.vue');
 const Cart = () => import('./../views/cart/Cart.vue');
@@ -25,6 +26,7 @@ export default new Router({
         {path: 'category', name: 'category', component: Category, meta: {keepAlive: true}},
         {path: 'mine', name: 'mine', component: Mine},
       ]
-    }
+    },
+    {path: '/confirmOrder', name: 'order', component: Order}
   ]
 })

@@ -3,182 +3,27 @@
       <!--头部区域-->
       <header class="titleWrapper">
         <h4><strong>购物车</strong></h4>
+        <button class="clearCart" @click="clearCart">清空购物车</button>
       </header>
       <div class="contentWrapper">
         <!--中间内容-->
         <main class="contentWrapperList">
           <section>
-            <div class="shopCartListCon">
+            <div class="shopCartListCon" v-for="(goods,index) in shopCartGoods" :key="goods.id">
               <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
+                <a href="javascript:;" @click.stop="singerGoodsSelected(goods.id)" class="cartCheckBox" :checked="goods.checked"></a>
               </div>
               <div class="center">
-                <img src="./images/detail1.jpg" alt="">
+                <img :src="goods.small_image" alt="">
               </div>
               <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
+                <a href="#">{{goods.name}}</a>
                 <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
+                  <p class="shopPrice">{{goods.price | moneyFormat}}</p>
                   <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="shopCartListCon">
-              <div class="left">
-                <a href="javascript:;" class="cartCheckBox" checked></a>
-              </div>
-              <div class="center">
-                <img src="./images/detail1.jpg" alt="">
-              </div>
-              <div class="right">
-                <a href="#">玥明子2017春秋新款韩版加肥加大码女装胖MM胖妹妹秋装胖人显瘦毛衣外套中长款打底连衣裙女 黑色 XXXL 150-168斤左右</a>
-                <div class="bottomContent">
-                  <p class="shopPrice">&yen;999.00</p>
-                  <div class="shopDeal">
-                    <span>-</span>
-                    <input disabled type="number" value="1">
-                    <span>+</span>
+                    <span @click="removeGoods(goods.id,goods.num)">-</span>
+                    <input disabled type="number" v-model="goods.num">
+                    <span @click="addToCart(goods.id,goods.name,goods.small_image,goods.price)">+</span>
                   </div>
                 </div>
               </div>
@@ -188,14 +33,20 @@
         <!--底部通栏-->
         <div class="tabBar">
           <div class="tabBarLeft">
-            <a href="javascript:;" class="cartCheckBox"></a>
+            <a
+                href="javascript:;"
+                class="cartCheckBox"
+                :checked="isSelectedAll"
+                @click.stop="selectedAll(isSelectedAll)"
+            ></a>
             <span style="font-size: 16px;">全选</span>
             <div class="selectAll">
-              合计：<span class="totalPrice">199.00</span>
+              合计：<span class="totalPrice">{{totalPrice | moneyFormat}}</span>
             </div>
           </div>
           <div class="tabBarRight">
-            <a href="#" class="pay">去结算(3)</a>
+<!--            <a href="#" class="pay">去结算({{goodsCount}})</a>-->
+            <router-link class="pay" to="/confirmOrder">去结算({{goodsCount}})</router-link>
           </div>
         </div>
       </div>
@@ -203,8 +54,100 @@
 </template>
 
 <script>
+  import {mapState, mapMutations} from 'vuex'
+  import { Dialog } from 'vant';  // 引入弹框组件
   export default {
-    name: "Cart"
+    name: "Cart",
+    computed: {
+      ...mapState(['shopCartGoods']),
+      // 商品的总件数
+      goodsCount() {
+        let selectedGoodsCount = 0;
+        Object.values(this.shopCartGoods).forEach((goods,index) => {
+          if (goods.checked) {
+            selectedGoodsCount += 1;
+          }
+        });
+        return selectedGoodsCount
+      },
+      // 商品全选或者全不选
+      isSelectedAll() {
+          let goodsCount = Object.keys(this.shopCartGoods).length;
+          let tag = goodsCount > 0;
+          Object.values(this.shopCartGoods).forEach((goods,index) => {
+            if (!goods.checked) {
+              tag = false;
+            }
+          });
+          return tag;
+      },
+      // 商品的总价
+      totalPrice() {
+        let totalPrice = 0;
+        Object.values(this.shopCartGoods).forEach((goods,index) => {
+          if (goods.checked) {
+            totalPrice += goods.price * goods.num
+          }
+        })
+        return totalPrice;
+      }
+    },
+    methods: {
+      ...mapMutations([
+        "REDUCE_CART",
+        "ADD_GOODS",
+        "SELECTED_SINGER_GOODS",
+        "SELECTED_ALL_GOODS",
+        "CLEAR_CART"
+      ]),
+      // 删除商品
+      removeGoods(goodsId, goodsNum) {
+        if (goodsNum > 1) {
+          this.REDUCE_CART({goodsId});
+        } else if (goodsNum === 1) {
+          Dialog.confirm({
+            title: '温馨提示',
+            message: '确定删除该商品吗？'
+          }).then(() => {
+            // on confirm
+            this.REDUCE_CART({goodsId});
+          }).catch(() => {
+            // on cancel
+          });
+        }
+      },
+      // 增加商品
+      addToCart(goodsId,goodsName,smallImage,goodsPrice) {
+        this.ADD_GOODS({
+          goodsId,
+          goodsName,
+          smallImage,
+          goodsPrice
+        })
+      },
+      // 单个商品的选中和取消
+      singerGoodsSelected(goodsId) {
+        this.SELECTED_SINGER_GOODS({goodsId})
+      },
+      // 全选和取消全选
+      selectedAll(isSelected) {
+        // {isSelected}  这样传参  mutations那边的SELECTED_ALL_GOODS接收参数的参数名也要一致  不然拿不到值
+        // [SELECTED_ALL_GOODS](state,{isSelected}) 或者[SELECTED_ALL_GOODS](state,obj)
+        this.SELECTED_ALL_GOODS({isSelected})
+      },
+      // 清空购物车
+      clearCart() {
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '确定要清空购物车吗？'
+        }).then(() => {
+          // on confirm
+          this.CLEAR_CART();
+        }).catch(() => {
+          // on cancel
+        });
+      }
+    }
   }
 </script>
 

@@ -100,7 +100,7 @@
         "SELECTED_ALL_GOODS",
         "CLEAR_CART"
       ]),
-      // 删除商品
+      // 删除商品dsa
       removeGoods(goodsId, goodsNum) {
         if (goodsNum > 1) {
           this.REDUCE_CART({goodsId});

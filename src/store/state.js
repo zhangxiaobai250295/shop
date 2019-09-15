@@ -13,7 +13,9 @@ const state = {
       'id': {}
      }
    */
-  shopCartGoods: {}
+  shopCartGoods: {},
+  // 用户信息
+  userInfo: {}
 };
 
 

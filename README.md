@@ -201,6 +201,7 @@ probeType选项：作用：有时候我们需要知道滚动的位置。当 prob
 addToCart(goods) {
     PubSub.publish('homeAddToCart', goods)
 }
+## 根目录下新建vue.config.js文件  配置跨域请求(反向代理的方式)
 ```  
 ## Project setup
 ```

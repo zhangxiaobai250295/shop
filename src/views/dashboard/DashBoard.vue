@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import {mapState,mapMutations} from 'vuex'
+  import {mapState,mapMutations,mapActions} from 'vuex'
   export default {
     name: "DashBoard",
     data() {
@@ -80,10 +80,14 @@
       }
     },
     methods: {
+      ...mapActions(['reqUserInfo']),
       ...mapMutations(['INIT_SHOP_CART'])
     },
     mounted() {  // 页面初始化完毕
-      // 1. 获取购物车的数据
+      // 1. 自动登录
+      this.reqUserInfo();
+
+      // 2. 获取购物车的数据
       this.INIT_SHOP_CART();
     }
   }

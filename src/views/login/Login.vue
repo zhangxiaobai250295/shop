@@ -20,7 +20,7 @@
           <div :class="{current: loginMode}">
             <section class="login-message">
               <input type="number" maxlength="11" placeholder="手机号" v-model="phone">
-              <button v-if="!countDown" class="get-verification" :class="{'phone_right': phoneRight}" @click="getVerifyCode">获取验证码</button>
+              <button v-if="!countDown" class="get-verification" :class="{'phone_right': phoneRight}" @click.prevent="getVerifyCode">获取验证码</button>
               <button v-if="countDown" disabled="disabled" class="get-verification">已发送({{countDown}}秒)</button>
             </section>
             <section class="login-verification">
@@ -35,33 +35,37 @@
           <div :class="{current: !loginMode}">
             <section>
               <section class="login-message">
-                <input type="tel" maxlength="11" placeholder="用户名">
+                <input type="tel" maxlength="11" placeholder="用户名" v-model="user_name">
               </section>
               <section class="login-verification">
-                <input type="password" maxlength="20" placeholder="密码" autocomplete="off"/>
-
+                <input v-if="pwdMode" v-model="pwd" type="password" maxlength="20" placeholder="密码" autocomplete="off"/>
+                <input  v-else type="text" v-model="pwd" maxlength="20" placeholder="密码" autocomplete="off"/>
                 <div class="switch-show">
-                  <img src="./images/hide_pwd.png" alt="" width="20">
+                  <img :class="{on: pwdMode}" @click.prevent="dealPwdMode(false)" src="./images/hide_pwd.png" alt="" width="20">
+                  <img :class="{on: !pwdMode}" @click.prevent="dealPwdMode(true)" src="./images/show_pwd.png" alt="" width="20">
                 </div>
               </section>
               <section class="login-message">
-                <input type="text" maxlength="4" placeholder="验证码">
+                <input type="text" maxlength="4" placeholder="验证码" v-model="captcha">
                 <img
                     class="get-verification"
                     src="http://demo.itlike.com/web/xlmc/api/captcha"
+                    @click.prevent="getCaptcha"
+                    ref="captcha"
                 >
               </section>
             </section>
           </div>
-          <button class="login-submit" @click="login">登录</button>
+          <button class="login-submit" @click.prevent="login">登录</button>
         </form>
-        <button class="login-back">返回</button>
+        <button class="login-back" @click.prevent="$router.back()">返回</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
   import {Toast} from 'vant'
   import {LoginModel} from "../../service/login";
   const loginModel = new LoginModel();
@@ -78,10 +82,16 @@
         loginMode: true,  // 登陆模式  手机登陆 or 密码登陆  true：手机登陆
         phone: null,    // 手机号码
         countDown: 0,   // 发送验证码后的倒计时时长
-        phoneCode: ''  // 手机验证码
+        phoneCode: '',  // 手机验证码
+        userInfo: null,  // 接受用户登录成功后的信息
+        user_name: null, //  用户名
+        pwd: null,  // 密码
+        pwdMode: true,  // true 密文  false 明文
+        captcha: null, // 图形验证码
       }
     },
     methods: {
+      ...mapActions(['syncUserInfo']),
       // 处理登陆模式
       dealLoginMode(mode) {
         this.loginMode = mode
@@ -101,7 +111,7 @@
           // 获取手机短信验证码
           let phoneCode = await loginModel.getPhoneCode(this.phone);
           this.phoneCode = {...phoneCode};
-          console.log(this.phoneCode);
+          // console.log(this.phoneCode);
         }
       },
       // 登录 分模式
@@ -138,10 +148,77 @@
           }
           // 发送登录请求
           const loginData = await loginModel.phoneCodeLogin(this.phone,this.phoneCode.code);
-          console.log(loginData);
+          // console.log(loginData);
+          if (loginData.success_code === 200) {
+            this.userInfo = loginData.data;
+            console.log(this.userInfo);
+          } else {
+            this.userInfo = {
+              message: '登录失败，手机或者验证码不正确'
+            }
+          }
+          // 后续处理
+          if (!this.userInfo.token) {  // 失败的提示
+            Toast({
+              message: this.userInfo.message,
+              duration: 500
+            })
+          } else {    // 登录成功
+            this.syncUserInfo(this.userInfo);  // 保存用户信息
+            // debugger
+            this.$router.back()  // 回到主面板
+          }
         } else {  // 用户名和密码登录
-
+          // 3.2 用户名和密码登录
+          if(!this.user_name){
+            Toast({
+              message: '请输入用户名！',
+              duration: 500
+            });
+            return;
+          }else if(!this.pwd){
+            Toast({
+              message: '请输入密码！',
+              duration: 500
+            });
+            return;
+          } else if(!this.captcha){
+            Toast({
+              message: '请输入验证码！',
+              duration: 500
+            });
+            return;
+          }
+          // 发起请求
+          console.log(this.user_name);
+          console.log(this.pwd);
+          console.log(this.captcha);
+          const loginData = await loginModel.pwdLogin(this.user_name, this.pwd, this.captcha);
+          console.log(loginData);
+          if(loginData.success_code === 200){
+            // 4.1 保存用户信息
+            this.syncUserInfo(loginData.data);
+            // 4.2 回到主面板
+            this.$router.back();
+          }else {
+            Toast({
+              message: '登录失败，用户名或者密码不正确！',
+              duration: 500
+            });
+          }
         }
+
+      },
+      // 处理密码的显示模式
+      dealPwdMode(pwdMode){
+        this.pwdMode = pwdMode
+      },
+      // 获取随机图形验证码
+      getCaptcha() {
+        // 拿到图片节点
+        let captchaEle = this.$refs.captcha;
+        // 为了防止服务器以为请求没有发生改变而返回同样的数据
+        this.$set(captchaEle,'src','http://demo.itlike.com/web/xlmc/api/captcha?time=' + new Date())
       }
     }
   }

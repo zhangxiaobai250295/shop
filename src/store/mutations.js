@@ -4,9 +4,12 @@ import {
   REDUCE_CART,
   SELECTED_SINGER_GOODS,
   SELECTED_ALL_GOODS,
-  CLEAR_CART
+  CLEAR_CART,
+  USER_INFO,
+  INIT_USER_INFO,
+  RESET_USER_INFO
 } from "./mutations-type";
-import {getStore, setStore} from '../config/global'
+import {getStore, setStore, removeStore} from '../config/global'
 import Vue from 'vue'
 const mutations = {
   // 网购物车里面添加一件商品
@@ -102,6 +105,24 @@ const mutations = {
     shopCartGoods = null;
     state.shopCartGoods = {...shopCartGoods};
     setStore('shopCartGoods', state.shopCartGoods)
+  },
+  // 保存用户登录成功后的信息
+  [USER_INFO](state, {userInfo}) {
+    state.userInfo = userInfo;
+    setStore('userInfo', state.userInfo)
+  },
+  // 获取用户信息
+  [INIT_USER_INFO](state) {
+    // 从本地获取用户信息
+    const userInfo = getStore('userInfo');
+    if (userInfo) {
+      state.userInfo = JSON.parse(userInfo)
+    }
+  },
+  // 9. 退出登录
+  [RESET_USER_INFO](state){
+    state.userInfo = {};
+    removeStore('userInfo');
   }
 };
 

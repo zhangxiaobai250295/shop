@@ -201,8 +201,24 @@ probeType选项：作用：有时候我们需要知道滚动的位置。当 prob
 addToCart(goods) {
     PubSub.publish('homeAddToCart', goods)
 }
+```
 ## 根目录下新建vue.config.js文件  配置跨域请求(反向代理的方式)
-```  
+```
+module.exports = {
+  publicPath: '/',
+  devServer: {
+    proxy: {
+      '/api': {   // 请求路径以api开头的都代理到下面target设置的url去
+        target: 'http://localhost:3000/web/xlmc',
+        changeOrigin: true,  // 开启跨域
+        pathRewrite: {  // 重写路径
+          '^/api': ''  // 匹配到第一个以api开头的替换为空  不然的话请求的路径为：http://localhost:3000/web/xlmc/api/api/send_code
+        }
+      }
+    }
+  }
+};
+```
 ## Project setup
 ```
 npm install

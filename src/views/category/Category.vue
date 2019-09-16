@@ -70,10 +70,10 @@
     },
     data (){
       return {
-        showLoading: true,        // 是否显示在进入category页面时数据未加载成功时的加载动画
+        showLoading: true,         // 是否显示在进入category页面时数据未加载成功时的加载动画
         categoriesData: [],        // 左边分类的的目录数据
-        categoriesDetailData: [],   // 左边分类的的目录的详情数据
-        currentIndex: 0           // 左边分类item是否选中
+        categoriesDetailData: [],  // 左边分类的的目录的详情数据
+        currentIndex: 0            // 左边分类item是否选中
       }
     },
     methods: {
@@ -84,7 +84,7 @@
         Promise.all([categoriesData, categoriesDetailData]).then(res => {
           if (res[0].success) {
             this.categoriesData = res[0].data.cate;
-            console.log(this.categoriesData);
+            // console.log(this.categoriesData);
           }
           if (res[1].success) {
             this.categoriesDetailData = res[1].data.cate;

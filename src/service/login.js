@@ -8,9 +8,19 @@ class LoginModel extends HTTP{
   }
   // 手机验证码方式点击登陆的方法  post请求
   phoneCodeLogin(phone, code) {
-    console.log(phone);
-    console.log(code);
     return this.ajax(config.BASE_URL + '/api/login_code', {phone, code}, 'POST')
+  }
+  // 2.3 用户名和密码登录(POST)
+  pwdLogin(user_name, user_pwd, captcha) {
+    return this.ajax(config.BASE_URL + '/api/login_pwd', {user_name, user_pwd, captcha}, 'POST');
+  }
+  // 2.4 自动登录
+  getUserInfo() {
+    return this.ajax(config.BASE_URL + '/api/userinfo');
+  }
+  // 2.5 退出登录
+  getLogOut() {
+    return this.ajax(config.BASE_URL + '/api/logout');
   }
 }
 

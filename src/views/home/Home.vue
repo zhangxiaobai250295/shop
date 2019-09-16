@@ -4,6 +4,7 @@
         <!--   头部     -->
         <Header />
         <!--   轮播图     -->
+
         <Swiper :swiperData="swiperData"/>
         <!--   食品分类导航     -->
         <Nav :navData="navData"/>
@@ -79,7 +80,7 @@
       ...mapMutations(['ADD_GOODS']),
       async getHomeData() {
         const HomeData = await homeModel.getHomeData();
-        console.log(HomeData);
+        // console.log(HomeData);
         if (HomeData.success) {
           this.swiperData = HomeData.data.list[0].icon_list;
           this.navData = HomeData.data.list[2].icon_list;
@@ -100,6 +101,11 @@
         let docB = document.documentElement || document.body;
         animate(docB, {scrollTop: '0'}, 400, 'ease-out');
       }
+    },
+    beforeDestroy() {
+      // 清除发布的消息  不然会占用内存  且发布订阅者模式会有一个订阅栈
+      // 不清除的话  每次订阅到就会从头开始执行之前所有发布过的消息
+      PubSub.unsubscribe('homeAddToCart');
     }
   }
 </script>

@@ -43,9 +43,15 @@
       }
     },
     methods: {
+      // 发布消息
       addToCart(goods) {
         PubSub.publish('homeAddToCart', goods)
       }
+    },
+    beforeDestroy() {
+      // 清除发布的消息  不然会占用内存  且发布订阅者模式会有一个订阅栈
+      // 不清除的话  每次订阅到就会从头开始执行之前所有发布过的消息
+      PubSub.unsubscribe('homeAddToCart');
     }
   }
 </script>

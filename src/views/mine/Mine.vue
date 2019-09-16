@@ -4,18 +4,19 @@
           title="我的"
           :fixed= true
           :border= false
+
       >
       </van-nav-bar>
 
       <van-cell-group style="margin-top: 2.6rem">
-        <van-cell is-link style="background-color: #2eba5a;color: #fff" :center=true>
+        <van-cell is-link style="background-color: #2eba5a;color: #fff" :center=true @click="$router.push('/dashboard/mine/userCenter')">
           <!-- 使用 title 插槽来自定义标题 -->
           <template slot="title">
             <div class="personMsg">
               <img src="./images/12.png" alt="">
               <div class="personInfo">
-                <span>仙剑:李逍遥</span>
-                <span>微信号：xianjian</span>
+                <span>{{userInfo.real_name}}</span>
+                <span>手机号：{{userInfo.phone}}</span>
               </div>
             </div>
           </template>
@@ -23,7 +24,7 @@
       </van-cell-group>
 
       <van-cell-group>
-        <van-cell icon="label" title="我的订单" is-link value="查看所有的订单"></van-cell>
+        <van-cell icon="label" class="abcd"  title="我的订单" is-link value="查看所有的订单"></van-cell>
         <van-grid>
           <van-grid-item
               v-for="(order,index) in orderData"
@@ -44,6 +45,10 @@
       <van-cell-group style="margin-top: .6rem">
         <van-cell icon="send-gift-o" title="shopApp" is-link value="下载app体验更佳"></van-cell>
       </van-cell-group>
+      <!--    路由出口-->
+      <transition name="router-slider" mode="out-in">
+        <router-view></router-view>
+      </transition>
     </div>
     <SelectLogin v-else />
 </template>
@@ -84,6 +89,7 @@
 .van-nav-bar__title{
   color: white;
 }
+.abcd .van-cell__left-icon{color:red;}
 /*.van-icon{*/
 /*  color: #FFFFFF;*/
 /*}*/
@@ -107,5 +113,15 @@
     flex-direction: column;
     margin-left: .8rem;
   }
+}
+
+/*转场动画*/
+.router-slider-enter-active, .router-slider-leave-active {
+  transition: all 0.3s;
+}
+
+.router-slider-enter, .router-slider-leave-active {
+  transform: translate3d(2rem, 0, 0);
+  opacity: 0;
 }
 </style>

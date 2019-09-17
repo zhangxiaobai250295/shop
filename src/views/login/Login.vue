@@ -151,7 +151,7 @@
           // console.log(loginData);
           if (loginData.success_code === 200) {
             this.userInfo = loginData.data;
-            console.log(this.userInfo);
+            // console.log(this.userInfo);
           } else {
             this.userInfo = {
               message: '登录失败，手机或者验证码不正确'
@@ -190,11 +190,8 @@
             return;
           }
           // 发起请求
-          console.log(this.user_name);
-          console.log(this.pwd);
-          console.log(this.captcha);
           const loginData = await loginModel.pwdLogin(this.user_name, this.pwd, this.captcha);
-          console.log(loginData);
+          // console.log(loginData);
           if(loginData.success_code === 200){
             // 4.1 保存用户信息
             this.syncUserInfo(loginData.data);
@@ -207,7 +204,6 @@
             });
           }
         }
-
       },
       // 处理密码的显示模式
       dealPwdMode(pwdMode){

@@ -50,21 +50,26 @@
     },
     mounted() {
       // 订阅消息
-      PubSub.subscribe('categoryAddToCart',(msg,goods) => {
-        if (msg === 'categoryAddToCart') {
-          this.ADD_GOODS({
-            goodsId: goods.id,
-            goodsName: goods.name,
-            smallImage: goods.small_image,
-            goodsPrice: goods.price,
-          })
-        }
-        Toast({
-          message: '添加购物车成功',
-          duration: 800
-        });
-      })
+      // PubSub.subscribe('categoryAddToCart',(msg,goods) => {
+      //   if (msg === 'categoryAddToCart') {
+      //     this.ADD_GOODS({
+      //       goodsId: goods.id,
+      //       goodsName: goods.name,
+      //       smallImage: goods.small_image,
+      //       goodsPrice: goods.price,
+      //     })
+      //   }
+      //   Toast({
+      //     message: '添加购物车成功',
+      //     duration: 800
+      //   });
+      // })
     },
+    // beforeDestroy() {
+    //   // 清除发布的消息  不然会占用内存  且发布订阅者模式会有一个订阅栈
+    //   // 不清除的话  每次订阅到就会从头开始执行之前所有发布过的消息
+    //   PubSub.unsubscribe('categoryAddToCart');
+    // },
     created (){
       this.getCategoryData();      // 获取category页面的全部数据
     },
@@ -93,7 +98,13 @@
           this.hiddenLoading();
           // 初始化滚动插件
           this.$nextTick(() => {
-            this.leftScroll = new BScroll('.leftWrapper', {probeType: 3})
+            this.leftScroll = new BScroll('.leftWrapper', {
+              probeType: 3,
+              click: true,
+              scrollY: true,
+              tap: true, // 该插件会阻止默认的点击事件 所以在这里开启
+              onmousewheel: true // 手机端滚动(解决一开始加载不能滚动的问题)
+            })
           })
         })
       },

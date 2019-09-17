@@ -173,15 +173,21 @@ Vue.filter('moneyFormat', (value)=>{
 - 初始化,注意：一定要等需要滚动的数据加载下来之后再初始化(更vant的轮播图一样,很多插件的初始化都是要等数据下来在初始化)
 ```
 this.$nextTick(() => {
-    this.leftScroll = new BScroll('.leftWrapper', {probeType: 3})
-})
+    this.leftScroll = new BScroll('.leftWrapper', {
+      probeType: 3,
+      click: true,
+      scrollY: true,
+      tap: true, // 该插件会阻止默认的点击事件 所以在这里开启
+      onmousewheel: true // 手机端滚动(解决一开始加载不能滚动的问题)
+    })
+  })
 probeType选项：作用：有时候我们需要知道滚动的位置。当 probeType 为 1 的时候，会非实时（屏幕滑动超过一定时间后）派发scroll 事件；当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。如果没有设置该值，其默认值为 0，即不派发 scroll 事件。
 ```
 - 注意：滚动元素的父元素一定要设置一个固定的高度,否则滚动不会生效
 - $nextTick ：vue中对dom元素的更新有一个更新队列，一个队列就是一个事件循环，一个事件循环就是一个Tick，组件一开始加载的时候，渲染的dom元素就是一个Tick，而第一个Tick的时候，滚动插件需要的数据可能还没有请求过来，所以我们不能在第一个Tick的时候初始化我们的滚动插件
 ## 使用发布者和消息订阅插件 
 - 为了实现不同页面商品数据加入购物车的操作（因为加入购物车这个按钮所在的组件层级有点深，如果使用自定义事件emmit来传递事件有点麻烦，而且加入购物车这个事件应该是在整个页面组件的最外层来实现的）
-- npm i pubsub-js --save  // 下载插件
+- npm i pubsub-js --save          // 下载插件
 - import PubSub from 'pubsub-js'  // 在需要的组件中引入或者全局引入
 - 
 ```
@@ -201,6 +207,14 @@ probeType选项：作用：有时候我们需要知道滚动的位置。当 prob
 addToCart(goods) {
     PubSub.publish('homeAddToCart', goods)
 }
+```
+- 注意，发布完或者订阅玩后一定要清除，不然会影响性能....例(订阅的地方清除就行)：
+```
+beforeDestroy() {
+  // 清除发布的消息  不然会占用内存  且发布订阅者模式会有一个订阅栈
+  // 不清除的话  每次订阅到就会从头开始执行之前所有发布过的消息
+  PubSub.unsubscribe('categoryAddToCart');
+},
 ```
 ## 根目录下新建vue.config.js文件  配置跨域请求(反向代理的方式)
 ```

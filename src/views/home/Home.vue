@@ -37,30 +37,33 @@
   import PubSub from 'pubsub-js'
 
   // 引入vuex
-  import {mapMutations} from 'vuex'
+  import {mapMutations, mapState} from 'vuex'
   // 引入通知组件
   import { Toast } from 'vant';
 
+  // 引入购物车接口模块
+  import {CartModel} from "../../service/cart";
+  const cartModel = new CartModel();
   export default {
     name: "Home",
     created() {
       this.getHomeData();
     },
+    computed: {
+      ...mapState(['userInfo'])
+    },
     mounted() {
       // 订阅消息
       PubSub.subscribe('homeAddToCart',(msg,goods) => {
         if (msg === 'homeAddToCart') {
-          this.ADD_GOODS({
-            goodsId: goods.id,
-            goodsName: goods.name,
-            smallImage: goods.small_image,
-            goodsPrice: goods.price,
-          })
+          if (this.userInfo.token){  // 已经登录
+            // 1.调用服务器的接口  把数据上传到服务器
+            // 2. 上传成功后 在同步到本地
+            this.dealGoodsAdd(goods);
+          } else {
+            this.$router.push('/login')
+          }
         }
-        Toast({
-          message: '添加购物车成功',
-          duration: 800
-        });
       })
     },
     data(){
@@ -100,6 +103,26 @@
         // 做缓动动画返回顶部
         let docB = document.documentElement || document.body;
         animate(docB, {scrollTop: '0'}, 400, 'ease-out');
+      },
+      // 添加商品到购物车
+      async dealGoodsAdd(goods) {
+        // 2.1 调用服务器端的接口
+        let result = await cartModel.addGoodsToCar(this.userInfo.token, goods.id, goods.name, goods.price, goods.small_image,);
+        // console.log(result);
+        if(result.success_code === 200){
+          // 上传服务器成功后 添加到本地
+          this.ADD_GOODS({
+            goodsId: goods.id,
+            goodsName: goods.name,
+            smallImage: goods.small_image,
+            goodsPrice: goods.price
+          });
+          // 提示用户
+          Toast({
+            message: '添加到购物车成功！',
+            duration: 800
+          });
+        }
       }
     },
     beforeDestroy() {

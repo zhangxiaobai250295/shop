@@ -81,6 +81,7 @@
     },
     methods: {
       ...mapMutations(['ADD_GOODS']),
+      // 得到home页面的数据
       async getHomeData() {
         const HomeData = await homeModel.getHomeData();
         // console.log(HomeData);
@@ -99,8 +100,8 @@
           });
         }
       },
+      // 做缓冲动画返回顶部
       scrollTop() {
-        // 做缓动动画返回顶部
         let docB = document.documentElement || document.body;
         animate(docB, {scrollTop: '0'}, 400, 'ease-out');
       },

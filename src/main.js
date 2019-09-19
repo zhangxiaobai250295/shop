@@ -23,6 +23,9 @@ import './config/rem'
 // 引入过滤器
 import './config/filters'
 
+import VueQriously from 'vue-qriously'
+Vue.use(VueQriously);
+
 Vue.config.productionTip = false;
 
 new Vue({

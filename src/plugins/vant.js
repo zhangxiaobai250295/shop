@@ -50,3 +50,19 @@ Vue.use(SubmitBar);
 // 宫格
 import { Grid, GridItem } from 'vant';
 Vue.use(Grid).use(GridItem);
+
+// 弹出层容器，用于展示弹窗、信息提示等内容，支持多个弹出层叠加展示
+import { Popup } from 'vant';
+Vue.use(Popup);
+
+// 用于选择时间，支持日期、时分等时间维度，通常与 弹出层 组件配合使用
+import { DatetimePicker } from 'vant';
+Vue.use(DatetimePicker);
+
+// 商品卡片
+import { Card } from 'vant';
+Vue.use(Card);
+
+// 标签页
+import { Tab, Tabs } from 'vant';
+Vue.use(Tab).use(Tabs);

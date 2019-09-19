@@ -233,6 +233,16 @@ module.exports = {
   }
 };
 ```
+## 使用moment日期插件
+- npm install moment --save
+## 生成二维码插件vue-qriously
+- npm install --save vue-qriously
+- 在mian.js中配置
+```
+import VueQriously from 'vue-qriously'
+Vue.use(VueQriously)
+```
+
 ## Project setup
 ```
 npm install

@@ -13,9 +13,11 @@ const Cart = () => import('./../views/cart/Cart.vue');
 // 用户中心
 const Mine = () => import('./../views/mine/Mine.vue');
 const UserCenter = ()=> import('./../views/mine/children/UserCenter');
+const MineOrder = ()=> import('./../views/mine/children/MineOrder');
 
 // 使用懒加载  Order下的子级组件
 const MyAddress = () => import('./../views/order/children/MyAddress');
+const OrderDetail = ()=> import('./../views/order/children/OrderDetail.vue');
 
 // 引入MyAddress下的子路由
 const AddAddress = () => import('./../views/order/children/children/AddAddress');
@@ -45,6 +47,7 @@ export default new Router({
           component: Mine,
           children: [
             {path: 'userCenter', component: UserCenter}, // 用户中心
+            {path: 'mineOrder', component: MineOrder}
           ]
         },
       ]
@@ -64,6 +67,11 @@ export default new Router({
             // 编辑地址
             {path: 'editAddress', name: 'editAddress', component: EditAddress},
           ]
+        },
+        {
+          path: 'orderDetail',
+          name: 'orderDetail',
+          component: OrderDetail
         }
       ]
     },

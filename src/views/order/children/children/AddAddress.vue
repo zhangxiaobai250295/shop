@@ -24,21 +24,53 @@
 </template>
 
 <script>
+  // 引入省市区地址
+  import areaList from './../../../../config/area'
   import {Toast} from 'vant'
+  import {mapState} from 'vuex'
+
+  // 引入order处理模块
+  import {OrderModel} from "../../../../service/order";
+  const orderModel = new OrderModel();
+
+  import PubSub from 'pubsub-js'
+
   export default {
     name: "AddAddress",
     data() {
       return {
-        areaList: {},
+        areaList: areaList,
         searchResult: []
       }
+    },
+    computed: {
+      ...mapState(['userInfo'])
     },
     methods: {
       onClickLeft() {
         this.$router.back()
       },
-      onSave() {
-        Toast('save');
+      async onSave(content) {
+        // console.log(content);
+        if(this.userInfo.token) {
+          let result = await orderModel.addUserAddress(this.userInfo.token, content.name, content.tel, content.province+content.city+content.county, content.addressDetail, content.postalCode, content.isDefault, content.province, content.city, content.county, content.areaCode);
+          // console.log(result);
+          if(result.success_code === 200){ // 成功
+            Toast({
+              message: '添加地址成功！',
+              duration: 400
+            });
+            // 回去
+            this.$router.back();
+            // 发起通知  通知父组件已经添加新的地址  需要去请求加载数据下来显示
+            PubSub.publish('backToMyAddress');
+          }else {
+            Toast({
+              message: '添加地址失败！',
+              duration: 400
+            });
+          }
+        }
       },
       onChangeDetail(val) {
         if (val) {

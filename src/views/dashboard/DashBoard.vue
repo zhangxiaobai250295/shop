@@ -62,6 +62,7 @@
     },
     computed: {
       ...mapState(['shopCartGoods', 'userInfo']),
+      // 购物车商品的总数量
       goodsNum() {
         if (this.shopCartGoods) {
           /*
@@ -86,11 +87,13 @@
     methods: {
       ...mapActions(['reqUserInfo']),
       ...mapMutations(['INIT_SHOP_CART']),
+      // 初始化购物车的数据
       async initShopCart(){
-        if(this.userInfo.token){ // 已经登录
+        // 已经登录
+        if(this.userInfo.token){
           // 1. 获取当前用户购物车中的商品(服务器端)
           let result = await cartModel.getGoodsCart(this.userInfo.token);
-          console.log(result);
+          // console.log(result);
           // 2. 如果获取成功
           if(result.success_code === 200){
             /*
@@ -114,7 +117,7 @@
             });
             // 2.2 本地数据同步
             setStore('shopCartGoods', shopCartGoods);  // 把服务器请求下来的数据存储到本地
-            this.INIT_SHOP_CART()   // 然后在调用本地vuex的方法拿到同步下来的购物车数据
+            this.INIT_SHOP_CART()   // 然后在调用本地vuex的方法拿到同步下来的购物车数据渲染到购物车组件中
           }
         }
       }

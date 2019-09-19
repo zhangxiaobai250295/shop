@@ -46,7 +46,8 @@
           </div>
           <div class="tabBarRight">
 <!--            <a href="#" class="pay">去结算({{goodsCount}})</a>-->
-            <router-link class="pay" to="/confirmOrder">去结算({{goodsCount}})</router-link>
+<!--            <router-link class="pay" to="/confirmOrder">去结算({{goodsCount}})</router-link>-->
+            <button class="pay" @click="toPay">去结算({{goodsCount}})</button>
           </div>
         </div>
       </div>
@@ -56,8 +57,13 @@
 
 <script>
   import {mapState, mapMutations} from 'vuex'
-  import { Dialog } from 'vant';  // 引入弹框组件
+  import { Dialog, Toast } from 'vant';  // 引入弹框组件
   import SelectLogin from "../login/SelectLogin";
+
+  // 引入购物车接口模块
+  import {CartModel} from "../../service/cart";
+  const cartModel = new CartModel();
+
   export default {
     name: "Cart",
     components: {
@@ -93,7 +99,7 @@
           if (goods.checked) {
             totalPrice += goods.price * goods.num
           }
-        })
+        });
         return totalPrice;
       }
     },
@@ -106,51 +112,109 @@
         "CLEAR_CART"
       ]),
       // 删除商品
-      removeGoods(goodsId, goodsNum) {
+      async removeGoods(goodsId, goodsNum) {
         if (goodsNum > 1) {
-          this.REDUCE_CART({goodsId});
+          let result = await cartModel.changeCartNum(this.userInfo.token, goodsId, 'reduce');
+          // console.log(result);
+          if(result.success_code === 200){ // 修改成功
+            this.REDUCE_CART({goodsId});
+          }else {
+            Toast({
+              message: '出了点小问题哟~',
+              duration: 500
+            });
+          }
         } else if (goodsNum === 1) {
           Dialog.confirm({
             title: '温馨提示',
             message: '确定删除该商品吗？'
-          }).then(() => {
+          }).then(async () => {
             // on confirm
-            this.REDUCE_CART({goodsId});
+            let result = await cartModel.changeCartNum(this.userInfo.token, goodsId, 'reduce');
+            // console.log(result);
+            if(result.success_code === 200){ // 修改成功
+              this.REDUCE_CART({goodsId});
+            }else {
+              Toast({
+                message: '出了点小问题哟~',
+                duration: 500
+              });
+            }
           }).catch(() => {
             // on cancel
           });
         }
       },
-      // 增加商品
-      addToCart(goodsId,goodsName,smallImage,goodsPrice) {
-        this.ADD_GOODS({
-          goodsId,
-          goodsName,
-          smallImage,
-          goodsPrice
-        })
+      // 增加商品数量
+      async addToCart(goodsId,goodsName,smallImage,goodsPrice) {
+        let result = await cartModel.changeCartNum(this.userInfo.token, goodsId, 'add');
+        // console.log(result);
+        if(result.success_code === 200){ // 修改成功
+          this.ADD_GOODS({
+            goodsId,
+            goodsName,
+            smallImage,
+            goodsPrice
+          })
+        }else {
+          Toast({
+            message: '出了点小问题哟~',
+            duration: 500
+          });
+        }
       },
       // 单个商品的选中和取消
-      singerGoodsSelected(goodsId) {
-        this.SELECTED_SINGER_GOODS({goodsId})
+      async singerGoodsSelected(goodsId) {
+        // 在服务器端选中单个商品
+        let result = await cartModel.singerGoodsSelect(this.userInfo.token, goodsId);
+        if(result.success_code === 200){
+          // 在本地选中单个商品
+          this.SELECTED_SINGER_GOODS({goodsId});
+        }
       },
       // 全选和取消全选
-      selectedAll(isSelected) {
+      async selectedAll(isSelected) {
         // {isSelected}  这样传参  mutations那边的SELECTED_ALL_GOODS接收参数的参数名也要一致  不然拿不到值
         // [SELECTED_ALL_GOODS](state,{isSelected}) 或者[SELECTED_ALL_GOODS](state,obj)
-        this.SELECTED_ALL_GOODS({isSelected})
+
+        // 在服务器端选中全部商品
+        let result = await cartModel.allGoodsSelect(this.userInfo.token, isSelected);
+        if(result.success_code === 200){
+          // 在本地选中全部商品
+          this.SELECTED_ALL_GOODS({isSelected})
+        }
       },
       // 清空购物车
       clearCart() {
         Dialog.confirm({
           title: '温馨提示',
           message: '确定要清空购物车吗？'
-        }).then(() => {
+        }).then(async () => {
           // on confirm
-          this.CLEAR_CART();
+          let result = await cartModel.clearAllCart(this.userInfo.token);  // 在服务器中删除
+          // console.log(result);
+          if(result.success_code === 200){ // 服务器中删除成功
+            this.CLEAR_CART();             // 在本地删除
+          }else {
+            Toast({
+              message: '出了点小问题哟~',
+              duration: 500
+            });
+          }
         }).catch(() => {
           // on cancel
         });
+      },
+      // 去结算
+      toPay() {
+        if (this.totalPrice > 0) {
+          this.$router.push('/confirmOrder')
+        } else {
+          Toast({
+            message: '请先选择商品在结算',
+            duration: 1000
+          })
+        }
       }
     }
   }
